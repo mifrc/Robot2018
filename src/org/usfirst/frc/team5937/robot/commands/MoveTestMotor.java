@@ -3,6 +3,7 @@ package org.usfirst.frc.team5937.robot.commands;
 import org.usfirst.frc.team5937.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
+//Command to move the test motor
 public class MoveTestMotor extends Command {
 
     public MoveTestMotor() {
