@@ -7,7 +7,20 @@
 
 package org.usfirst.frc.team5937.robot;
 
+import org.usfirst.frc.team5937.robot.subsystems.TestMotor;
+import org.usfirst.frc.team5937.robot.commands.Autonomous;
+import org.usfirst.frc.team5937.robot.commands.MoveTestMotor;
+import org.usfirst.frc.team5937.robot.commands.AutonomousCommand;
+import org.usfirst.frc.team5937.robot.subsystems.DriveTrain;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -23,6 +36,11 @@ public class Robot extends TimedRobot {
 	private static final String kCustomAuto = "My Auto";
 	private String m_autoSelected;
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
+	public static final TestMotor testMotor = new TestMotor(); //TestMotor subsystem
+
+	public AutonomousCommand autonomous; //The command to be run in the autonomous
+	public RobotInfo info; //Static information about the robot
+	public DriveTrain driveTrain;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -33,6 +51,10 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", kDefaultAuto);
 		m_chooser.addObject("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
+		info = new RobotInfo();
+		
+		autonomous = new Autonomous(info.team, info.startingPosition); //Initializes autonomous command to be run later
+
 	}
 
 	/**
