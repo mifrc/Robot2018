@@ -1,16 +1,22 @@
 package org.usfirst.frc.team5937.robot.commands;
 
 import org.usfirst.frc.team5937.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
 
-//Command to move the test motor
-public class MoveTestMotor extends Command {
 
-    public MoveTestMotor() {
+//Example of how to program an autonomous command
+public class Autonomous1 extends AutonomousCommand {
+
+    public String name; // The name to be displayed as a choice at the SmartDashboard
+
+    public Autonomous1() {
+        name = "Autonomous1";
+
         //Requires defines any subsystem dependencies, so more than one command can't
         //use a subsystem at the same time
-        requires(Robot.testMotor);
-    }	
+        requires(null);
+    }
 
     //Starts the command
     @Override
@@ -21,11 +27,12 @@ public class MoveTestMotor extends Command {
     //Called periodically while the command is running
     @Override
     protected void execute() {
-        Robot.testMotor.moveForward();
+
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+
     }
 
 
@@ -42,7 +49,7 @@ public class MoveTestMotor extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-        end();
+
     }
 
 }

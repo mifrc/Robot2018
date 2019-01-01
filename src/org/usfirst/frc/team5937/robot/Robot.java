@@ -8,7 +8,7 @@
 package org.usfirst.frc.team5937.robot;
 
 import org.usfirst.frc.team5937.robot.subsystems.TestMotor;
-import org.usfirst.frc.team5937.robot.commands.Autonomous;
+import org.usfirst.frc.team5937.robot.commands.Autonomous1;
 import org.usfirst.frc.team5937.robot.commands.MoveTestMotor;
 import org.usfirst.frc.team5937.robot.commands.AutonomousCommand;
 import org.usfirst.frc.team5937.robot.subsystems.DriveTrain;
@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.util.*;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -32,77 +34,79 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-	private static final String kDefaultAuto = "Default";
-	private static final String kCustomAuto = "My Auto";
-	private String m_autoSelected;
-	private SendableChooser<String> m_chooser = new SendableChooser<>();
-	public static final TestMotor testMotor = new TestMotor(); //TestMotor subsystem
+    private SendableChooser<AutonomousCommand> autonomousChooser = new SendableChooser<>(); //SendableChooser for choosing autonomous program
+    public static final TestMotor testMotor = new TestMotor(); //TestMotor subsystem
+    public Set<AutonomousCommand> autonomousCommands; // The set of all autonomous routines
+    public Command autonomousCommand; // The command to be run in the autonomous
+    public RobotInfo info; //Static information about the robot (team and starting position)
+    public DriveTrain driveTrain; //Drive train subsystem
 
-	public AutonomousCommand autonomous; //The command to be run in the autonomous
-	public RobotInfo info; //Static information about the robot
-	public DriveTrain driveTrain;
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    @Override
+    public void robotInit() {
 
-	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
-	 */
-	@Override
-	public void robotInit() {
-		m_chooser.addDefault("Default Auto", kDefaultAuto);
-		m_chooser.addObject("My Auto", kCustomAuto);
-		SmartDashboard.putData("Auto choices", m_chooser);
-		info = new RobotInfo();
-		
-		autonomous = new Autonomous(info.team, info.startingPosition); //Initializes autonomous command to be run later
+        info = new RobotInfo();
 
-	}
+        //AUTONOMOUS SETUP:
 
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString line to get the auto name from the text box below the Gyro
-	 *
-	 * <p>You can add additional auto modes by adding additional comparisons to
-	 * the switch structure below with additional strings. If using the
-	 * SendableChooser make sure to add them to the chooser code above as well.
-	 */
-	@Override
-	public void autonomousInit() {
-		m_autoSelected = m_chooser.getSelected();
-		// m_autoSelected = SmartDashboard.getString("Auto Selector",
-		// 		kDefaultAuto);
-		System.out.println("Auto selected: " + m_autoSelected);
-	}
+        autonomousCommands = new TreeSet<AutonomousCommand>();
 
-	/**
-	 * This function is called periodically during autonomous.
-	 */
-	@Override
-	public void autonomousPeriodic() {
-		switch (m_autoSelected) {
-			case kCustomAuto:
-				// Put custom auto code here
-				break;
-			case kDefaultAuto:
-			default:
-				// Put default auto code here
-				break;
-		}
-	}
+        //Add any autonomous programs to autonomousCommands as shown here:
+        autonomousCommands.add(new Autonomous1());
 
-	/**
-	 * This function is called periodically during operator control.
-	 */
-	@Override
-	public void teleopPeriodic() {
-	}
+        //Adds all autonomous commands to the SmartDashboard for the user to choose between
+        Iterator<AutonomousCommand> it = autonomousCommands.iterator();
+        while (it.hasNext()) {
+            AutonomousCommand temp = it.next();
+            autonomousChooser.addObject(temp.name, temp);
+        }
+        SmartDashboard.putData("Auto choices", autonomousChooser);
+    }
 
-	/**
-	 * This function is called periodically during test mode.
-	 */
-	@Override
-	public void testPeriodic() {
-	}
+    // Called when autonomous mode starts. Starts the autonomous command
+    @Override
+    public void autonomousInit() {
+        System.out.println("Autonomous selected: " + autonomousChooser.getSelected().name);
+        autonomousCommand = (Command) autonomousChooser.getSelected();
+        autonomousCommand.start();
+    }
+
+    // Called periodically during autonomous
+    @Override
+    public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
+        //TODO send status to the SmartDashboard
+    }
+
+    // Called when the robot is put into operator control mode
+    @Override
+    public void teleopInit() {
+        
+    }
+    
+    // Called periodically during operator control period
+    @Override
+    public void teleopPeriodic() {
+    }
+
+    //Called periodically during test mode
+    @Override
+    public void testPeriodic() {
+        
+    }
+    
+    //Called when robot is put into disabled mode
+    @Override
+    public void disabledInit() {
+        
+    }
+    
+    //Called periodically when the robot is in disabled mode
+    @Override
+    public void disabledPeriodic() {
+        
+    }
 }
