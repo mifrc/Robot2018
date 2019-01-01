@@ -35,12 +35,11 @@ import java.util.*;
  */
 public class Robot extends TimedRobot {
     private SendableChooser<AutonomousCommand> autonomousChooser = new SendableChooser<>(); //SendableChooser for choosing autonomous program
-    public static final TestMotor testMotor = new TestMotor(); //TestMotor subsystem
-    public Set<AutonomousCommand> autonomousCommands; // The set of all autonomous routines
-    public Command autonomousCommand; // The command to be run in the autonomous
+    private Set<AutonomousCommand> autonomousCommands; // The set of all autonomous routines
+    public AutonomousCommand autonomousCommand; // The command to be run in the autonomous
     public RobotInfo info; //Static information about the robot (team and starting position)
-    public DriveTrain driveTrain; //Drive train subsystem
-
+    public MoveTestMotor moveTestMotor;
+    
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -49,7 +48,7 @@ public class Robot extends TimedRobot {
     public void robotInit() {
 
         info = new RobotInfo();
-
+        
         //AUTONOMOUS SETUP:
 
         autonomousCommands = new TreeSet<AutonomousCommand>();
@@ -64,13 +63,16 @@ public class Robot extends TimedRobot {
             autonomousChooser.addObject(temp.name, temp);
         }
         SmartDashboard.putData("Auto choices", autonomousChooser);
+        
+        SmartDashboard.putData(Scheduler.getInstance()); //Makes the SmartDashboard display the status of running commands
+        
     }
 
     // Called when autonomous mode starts. Starts the autonomous command
     @Override
     public void autonomousInit() {
         System.out.println("Autonomous selected: " + autonomousChooser.getSelected().name);
-        autonomousCommand = (Command) autonomousChooser.getSelected();
+        autonomousCommand = autonomousChooser.getSelected();
         autonomousCommand.start();
     }
 
@@ -81,10 +83,11 @@ public class Robot extends TimedRobot {
         //TODO send status to the SmartDashboard
     }
 
+
     // Called when the robot is put into operator control mode
     @Override
     public void teleopInit() {
-        
+        autonomousCommand.cancel();
     }
     
     // Called periodically during operator control period
@@ -92,16 +95,25 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
     }
 
+    
+    //Called when the robot is put into test mode
+    @Override
+    public void testInit() {
+        Scheduler.getInstance().removeAll();
+        moveTestMotor.start();
+    }
+    
     //Called periodically during test mode
     @Override
     public void testPeriodic() {
-        
+        Scheduler.getInstance().run();
     }
-    
+
+
     //Called when robot is put into disabled mode
     @Override
     public void disabledInit() {
-        
+        Scheduler.getInstance().removeAll();
     }
     
     //Called periodically when the robot is in disabled mode
