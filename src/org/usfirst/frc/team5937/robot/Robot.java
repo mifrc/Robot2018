@@ -34,45 +34,28 @@ import java.util.*;
  * project.
  */
 public class Robot extends TimedRobot {
-    private SendableChooser<AutonomousCommand> autonomousChooser = new SendableChooser<>(); //SendableChooser for choosing autonomous program
-    private Set<AutonomousCommand> autonomousCommands; // The set of all autonomous routines
-    public AutonomousCommand autonomousCommand; // The command to be run in the autonomous
-    public RobotInfo info; //Static information about the robot (team and starting position)
+    public RobotInfo info; // Static information about the robot (team and starting position)
     public MoveTestMotor moveTestMotor;
-    
+    public AutonomousCommand autonomousCommand; // The command to be run in the autonomous
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     @Override
     public void robotInit() {
+        SmartDashboardCommunicator.initialize();
 
         info = new RobotInfo();
         
-        //AUTONOMOUS SETUP:
 
-        autonomousCommands = new TreeSet<AutonomousCommand>();
-
-        //Add any autonomous programs to autonomousCommands as shown here:
-        autonomousCommands.add(new Autonomous1());
-
-        //Adds all autonomous commands to the SmartDashboard for the user to choose between
-        Iterator<AutonomousCommand> it = autonomousCommands.iterator();
-        while (it.hasNext()) {
-            AutonomousCommand temp = it.next();
-            autonomousChooser.addObject(temp.name, temp);
-        }
-        SmartDashboard.putData("Auto choices", autonomousChooser);
-        
-        SmartDashboard.putData(Scheduler.getInstance()); //Makes the SmartDashboard display the status of running commands
         
     }
 
     // Called when autonomous mode starts. Starts the autonomous command
     @Override
     public void autonomousInit() {
-        System.out.println("Autonomous selected: " + autonomousChooser.getSelected().name);
-        autonomousCommand = autonomousChooser.getSelected();
+        System.out.println("Autonomous selected: " + SmartDashboardCommunicator.getInstance().autonomousChooser.getSelected().name);
+        autonomousCommand = SmartDashboardCommunicator.getInstance().autonomousChooser.getSelected();
         autonomousCommand.start();
     }
 

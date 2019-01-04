@@ -3,7 +3,7 @@ package org.usfirst.frc.team5937.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 
-//Abstract class for a drive train. Drive train classes should extend this.
+// Abstract class for a drive train. Drive train classes should extend this.
 public abstract class DriveTrain extends Subsystem {
 
     public DriveTrain() {

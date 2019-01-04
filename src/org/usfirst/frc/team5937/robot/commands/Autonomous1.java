@@ -5,7 +5,7 @@ import org.usfirst.frc.team5937.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 
-//Example of how to program an autonomous command
+// Example of how to program an autonomous command
 public class Autonomous1 extends AutonomousCommand {
 
     public String name; // The name to be displayed as a choice at the SmartDashboard
@@ -13,8 +13,8 @@ public class Autonomous1 extends AutonomousCommand {
     public Autonomous1() {
         name = "Autonomous1";
 
-        //Requires defines any subsystem dependencies, so more than one command can't
-        //use a subsystem at the same time
+        // Requires defines any subsystem dependencies, so more than one command can't
+        // use a subsystem at the same time
         requires(null);
     }
 
