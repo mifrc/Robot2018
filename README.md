@@ -1,5 +1,6 @@
 # Robot2019
-!(http://img.shields.io/badge/team-5937-red.svg)[Team 5937]
+![Team 5937](http://img.shields.io/badge/team-5937-red.svg)
+
 2019 Mercer Island robot 
 
 ## Resources
